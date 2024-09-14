@@ -1,27 +1,34 @@
 from src.util import find_files, download_file
 import tempfile
 
-def fetch_video(drive, subfolder_id, test_name, video_no):
-    # Find the test folder within the character folder
-    test_folders = find_files(drive, f"name contains '{test_name}' and '{subfolder_id}' in parents and mimeType='application/vnd.google-apps.folder'")
-    if not test_folders:
-        raise FileNotFoundError(f"Test folder containing '{test_name}' not found")
+def fetch_video(drive, folder_id, video_no):
+    # Generate a list of possible names with varying leading zeros
+    possible_names = [str(video_no).zfill(i) for i in range(1, 4)]
 
-    test_folder_id = test_folders[0]['id']
+    # Search for folders that contain any of these possible names
+    query = " or ".join([f"name contains '{name}'" for name in possible_names])
+    video_folders = find_files(drive, f"({query}) and '{folder_id}' in parents and mimeType='application/vnd.google-apps.folder'")
 
-    # Find the video folder inside the test folder
-    video_folders = find_files(drive, f"name contains '{video_no}' and '{test_folder_id}' in parents and mimeType='application/vnd.google-apps.folder'")
     if not video_folders:
-        raise FileNotFoundError(f"Folder for video No '{video_no}' not found under test '{test_name}'")
-
+        raise FileNotFoundError(f"Folder for video No '{video_no}' not found in any format")
+    
+    print(f"Found video folders: {video_folders}")
     video_folder_id = video_folders[0]['id']
 
     # Find the video file inside the video folder
-    videos = find_files(drive, f"name contains 'Post {video_no}.mp4' and '{video_folder_id}' in parents")
-    if not videos:
-        raise FileNotFoundError(f"Video file 'Post {video_no}.mp4' not found")
+    video_files = []
+    for name in possible_names:
+        videos = find_files(drive, f"name='Post {name}.mp4' and '{video_folder_id}' in parents")
+        if videos:
+            video_files = videos
+            break
+    
+    if not video_files:
+        raise FileNotFoundError(f"Video file for No '{video_no}' not found in any format")
 
-    video_file_id = videos[0]['id']
+    video_file_id = video_files[0]['id']
+    video_file_name = video_files[0]['name']
+    print(f"Video file ID: {video_file_id}, Video file name: {video_file_name}")
 
     # Download the video file to a temporary location
     video_file = download_file(drive, video_file_id)

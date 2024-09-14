@@ -2,8 +2,8 @@
 import pandas as pd
 from src.util import find_files, download_file
 
-def fetch_xlsx_data(drive, subfolder_id):
-    excel_files = find_files(drive, f"'{subfolder_id}' in parents and mimeType='application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'")
+def fetch_xlsx_data(drive, folder_id):
+    excel_files = find_files(drive, f"'{folder_id}' in parents and mimeType='application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'")
     if not excel_files:
         raise FileNotFoundError("Excel file not found in character folder")
 
