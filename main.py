@@ -23,7 +23,8 @@ def main():
     schedule_df = fetch_xlsx_data(drive, main_folder_id)
 
     for index, row in schedule_df.iterrows():
-        video_no = row['No']
+        video_number = row['No']
+        video_no = str(video_number).strip()
         test_type = row['Test']
         test_name = row['Name']
         char_name = row['Char']
