@@ -18,8 +18,8 @@ def fetch_video(drive, folder_id, video_no):
     print(f"Found video folders: {video_folders}")
 
     # Generate the exact video file name (e.g., Post 017.mp4)
-    possible_video_name = f"Post {video_no.zfill(3)}.mp4"
-    print(f"Looking for exact video file: {possible_video_name}")
+    actual_video_name = f"Post {int(video_no)}.mp4"
+    print(f"Looking for exact video file: {actual_video_name}")
 
     # Iterate through each folder to find the video file
     video_file_id = None
@@ -38,7 +38,7 @@ def fetch_video(drive, folder_id, video_no):
             print(f"File Name: {file_name}, MIME Type: {mime_type}")
 
         # Search for the exact video file inside the folder
-        videos = find_files(drive, f"name = '{possible_video_name}' and '{video_folder_id}' in parents and mimeType contains 'video/'")
+        videos = find_files(drive, f"name = '{actual_video_name}' and '{video_folder_id}' in parents and mimeType contains 'video/'")
         
         if videos:
             print(f"Found exact matching video in folder {folder['name']}: {videos}")
