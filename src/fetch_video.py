@@ -46,10 +46,10 @@ def fetch_video(drive, folder_id, video_no):
             video_file_name = videos[0]['name']
             break
         else:
-            print(f"No video file '{possible_video_name}' found in folder {folder['name']}")
+            print(f"No video file '{actual_video_name}' found in folder {folder['name']}")
 
     if not video_file_id:
-        raise FileNotFoundError(f"Exact video file '{possible_video_name}' not found in any of the folders")
+        raise FileNotFoundError(f"Exact video file '{actual_video_name}' not found in any of the folders")
 
     print(f"Video file ID: {video_file_id}, Video file name: {video_file_name}")
 
